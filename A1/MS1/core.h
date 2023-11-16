@@ -21,11 +21,10 @@ int inputInt();
 
 int inputIntPositive();
 
-int inputIntRange(int min, int max);
+int inputIntRange(const int min, const int max);
 
-//                         FIXME
-char inputCharOption(const char* const validChars);
+char inputCharOption(const char validChars[]);
 
-void inputCString(char* const str, int min, int max);
+void inputCString(char* const str, const int min, const int max);
 
 void displayFormattedPhone(const char* const str);

@@ -89,9 +89,30 @@ int inputIntRange(const int min, const int max) {
     return value;
 }
 
-char inputCharOption(const char* const validChars) {
-    // TODO
-    return '0';
+char inputCharOption(const char validChars[]) {
+    char value = 0;
+    int i = 0;
+    int repeat = 1;
+
+    do {
+        scanf(" %c", &value);
+
+        for (i = 0; validChars[i] != '\0'; ++i) {
+            if (value == validChars[i]) {
+                repeat = 0;
+            }
+        }
+        if (repeat) {
+            clearInputBuffer();
+            printf("ERROR: Character must be one of [");
+            for (i = 0; validChars[i] != '\0'; ++i) {
+                printf("%c", validChars[i]);
+            }
+            printf("]: ");
+        }
+    } while (repeat);
+
+    return value;
 }
 
 void inputCString(char* const str, int min, int max) {
