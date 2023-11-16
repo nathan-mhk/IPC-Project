@@ -32,3 +32,72 @@ void suspend(void) {
     clearInputBuffer();
     putchar('\n');
 }
+
+int inputInt() {
+    char newLine = 0;
+    int value = 0;
+
+    while (newLine != '\n') {
+        scanf("%d%c", &value, &newLine);
+
+        if (newLine != '\n') {
+            clearInputBuffer();
+            printf("Error! Input a whole number: ");
+        }
+    }
+
+    return value;
+}
+
+int inputIntPositive() {
+    int value = 0;
+    int repeat = 0;
+
+    do {
+        value = inputInt();
+        
+        if (value <= 0) {
+            repeat = 1;
+
+            // Since we captured \n inside inputInt(), buffer is already cleared
+            // clearInputBuffer();
+
+            printf("ERROR! Value must be > 0: ");
+        } else {
+            repeat = 0;
+        }
+    } while (repeat);
+
+    return value;
+}
+
+int inputIntRange(const int min, const int max) {
+    int value = 0;
+    int repeat = 0;
+
+    do {
+        value = inputInt();
+        
+        if (value < min || value > max) {
+            repeat = 1;
+            printf("ERROR! Value must be between %d and %d inclusive: ", min, max);
+        } else {
+            repeat = 0;
+        }
+    } while (repeat);
+
+    return value;
+}
+
+char inputCharOption(const char* const validChars) {
+    // TODO
+    return '0';
+}
+
+void inputCString(char* const str, int min, int max) {
+    // TODO
+}
+
+void displayFormattedPhone(const char* const str) {
+    // TODO
+}
