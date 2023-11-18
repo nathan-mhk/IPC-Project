@@ -121,8 +121,7 @@ void inputCString(char* const str, const int min, const int max) {
     char* itr = str;
     const char* validChar = validChars;
     int len = 0;
-    int repeat = 0, reset = 0;
-    int ueqLen = 0;
+    int repeat = 0, reset = 0, ueqLen = 0;
     char alphbt = '\0';
 
     do {
@@ -189,6 +188,8 @@ void inputCString(char* const str, const int min, const int max) {
                 }
                 itr = str;
                 len = 0;
+
+                // alphbt != '\n'
                 if (repeat) {
                     clearInputBuffer();
                 }
@@ -200,33 +201,6 @@ void inputCString(char* const str, const int min, const int max) {
             }
         }
     } while (reset || repeat);
-
-    // do {
-    //     scanf(" %[^\n]", str);
-
-    //     // Expand this for loop to handle the strLen
-    //     // Might get SegFault if input is longer than the length of str
-    //     for (itr = str; *itr != '\0'; ++itr, ++len);
-
-    //     if (min == max && len != min) {
-    //         repeat = 1;
-    //         printf("ERROR: String length must be exactly %d chars: ", min);
-    //     } else if (len < min) {
-    //         repeat = 1;
-    //         printf("ERROR: String length must be between %d and %d chars: ", min, max);
-    //     } else if (len > max) {
-    //         repeat = 1;
-    //         printf("ERROR: String length must be no more than %d chars: ", max);
-    //     } else {
-    //         repeat = 0;
-    //     }
-
-    //     if (repeat) {
-    //         clearInputBuffer();
-    //     }
-
-    // } while (repeat);
-
 }
 
 void displayFormattedPhone(const char* const str) {
@@ -254,6 +228,7 @@ void displayFormattedPhone(const char* const str) {
             }
             allDigits = allDigits && isDigit;
         }
+        
         if (len == REQ_LEN && allDigits) {
             printf(
                 "(%c%c%c)%c%c%c-%c%c%c%c",
