@@ -118,7 +118,7 @@ char inputCharOption(const char validChars[]) {
 void inputCString(char* const str, const int min, const int max) {
     const char* const validChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM ";
 
-    char* i = str;
+    char* itr = str;
     const char* validChar = validChars;
     int len = 0;
     int repeat = 0, reset = 0;
@@ -130,8 +130,8 @@ void inputCString(char* const str, const int min, const int max) {
         scanf("%c", &alphbt);
 
         // Discard leading '\n'
-        // !(i == str && alphbt == '\n')
-        if (i != str || alphbt != '\n') {
+        // !(itr == str && alphbt == '\n')
+        if (itr != str || alphbt != '\n') {
             /**
              * Too short:
              *      '\n' && len < min
@@ -184,18 +184,18 @@ void inputCString(char* const str, const int min, const int max) {
             }
 
             if (reset) {
-                for (i = str; *i != '\0'; ++i) {
-                    *i = '\0';
+                for (itr = str; *itr != '\0'; ++itr) {
+                    *itr = '\0';
                 }
-                i = str;
+                itr = str;
                 len = 0;
                 if (repeat) {
                     clearInputBuffer();
                 }
             } else if (repeat) {
                 // Prevent putting '\n' into the string
-                *i = alphbt;
-                ++i;
+                *itr = alphbt;
+                ++itr;
                 ++len;
             }
         }
@@ -206,7 +206,7 @@ void inputCString(char* const str, const int min, const int max) {
 
     //     // Expand this for loop to handle the strLen
     //     // Might get SegFault if input is longer than the length of str
-    //     for (i = str; *i != '\0'; ++i, ++len);
+    //     for (itr = str; *itr != '\0'; ++itr, ++len);
 
     //     if (min == max && len != min) {
     //         repeat = 1;
@@ -230,5 +230,38 @@ void inputCString(char* const str, const int min, const int max) {
 }
 
 void displayFormattedPhone(const char* const str) {
-    // TODO
+    const int REQ_LEN = 10;
+    const char* const validChars = "0123456789";
+    const char* const invalidDisplay = "(___)___-____";
+    
+    int len = 0;
+    int allDigits = 0, isDigit = 0;
+    const char* itr = NULL;
+    const char* validChar = NULL;
+
+    if (str) {
+        for (
+            allDigits = 1, itr = str; 
+            *itr != '\0' && allDigits && len <= REQ_LEN; 
+            ++itr, ++len
+        ) {
+            for(
+                isDigit = 0, validChar = validChars; 
+                *validChar != '\0' && !isDigit; 
+                ++validChar
+            ) {
+                isDigit = *itr == *validChar;
+            }
+            allDigits = allDigits && isDigit;
+        }
+        if (len == REQ_LEN && allDigits) {
+            printf(
+                "(%c%c%c)%c%c%c-%c%c%c%c",
+                str[0], str[1], str[2], str[3], str[4],
+                str[5], str[6], str[7], str[8], str[9]
+            );
+            return;
+        }
+    }
+    printf("%s", invalidDisplay);
 }

@@ -3,10 +3,10 @@
 
 /*/////////////////////////////////////////////////////////////////////////
                         Assignment 1 - Milestone 1
-Full Name  :
-Student ID#:
-Email      :
-Section    :
+Full Name  : Nathan Kong
+Student ID#: 150950236
+Email      : nkong@mysenaca.ca
+Section    : NDD
 
 Authenticity Declaration:
 I declare this submission is the result of my own work and has not been
