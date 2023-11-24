@@ -293,7 +293,17 @@ void removePatient(struct Patient patient[], int max) {
 // Search and display patient record by patient number (form)
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void searchPatientByPatientNumber(const struct Patient patient[], int max) {
+    int patientNum = 0, index = 0;
 
+    printf("Search by patient number: ");
+    scanf("%d", &patientNum);
+
+    index = findPatientIndexByPatientNum(patientNum, patient, max);
+    if (index != -1) {
+        displayPatientData(&patient[index], FMT_FORM);
+    } else {
+        printf("*** No records found ***\n");
+    }
 }
 
 // Search and display patient records by phone number (tabular)
