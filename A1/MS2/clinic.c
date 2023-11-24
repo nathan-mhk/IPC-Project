@@ -203,6 +203,23 @@ void displayAllPatients(const struct Patient patient[], int max, int fmt) {
 // Search for a patient record based on patient number or phone number
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void searchPatientData(const struct Patient patient[], int max) {
+    int opt = 0;
+
+    printf("Search Options\n");
+    printf("==========================\n");
+    printf("1) By patient number\n");
+    printf("2) By phone number\n");
+    printf("..........................\n");
+    printf("0) Previous menu\n");
+    printf("..........................\n");
+    printf("Selection: ");
+
+    scanf("%d", &opt);
+    if (opt == 1) {
+        searchPatientByPatientNumber(patient, max);
+    } else if (opt == 2) {
+        searchPatientByPhoneNumber(patient, max);
+    }
 }
 
 // Add a new patient record to the patient array
