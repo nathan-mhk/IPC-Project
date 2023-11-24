@@ -1,9 +1,9 @@
 /*/////////////////////////////////////////////////////////////////////////
                         Assignment 1 - Milestone 2
-Full Name  :
-Student ID#:
-Email      :
-Section    :
+Full Name  : Nathan Kong
+Student ID#: 150950236
+Email      : nkong@mysenaca.ca
+Section    : NDD
 
 Authenticity Declaration:
 I declare this submission is the result of my own work and has not been
@@ -187,24 +187,28 @@ void menuPatientEdit(struct Patient* patient)
 
 // Display's all patient data in the FMT_FORM | FMT_TABLE format
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
-
+void displayAllPatients(const struct Patient patient[], int max, int fmt) {
+}
 
 // Search for a patient record based on patient number or phone number
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
+void searchPatientData(const struct Patient patient[], int max) {
+}
 
 // Add a new patient record to the patient array
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
+void addPatient(struct Patient patient[], int max) {
+}
 
 // Edit a patient record from the patient array
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
+void editPatient(struct Patient patient[], int max) {
+}
 
 // Remove a patient record from the patient array
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
+void removePatient(struct Patient patient[], int max) {
+}
 
 
 //////////////////////////////////////
@@ -213,19 +217,28 @@ void menuPatientEdit(struct Patient* patient)
 
 // Search and display patient record by patient number (form)
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
+void searchPatientByPatientNumber(const struct Patient patient[], int max) {
 
+}
 
 // Search and display patient records by phone number (tabular)
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
+void searchPatientByPhoneNumber(const struct Patient patient[], int max) {
+}
 
 // Get the next highest patient number
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
+int nextPatientNumber(const struct Patient patient[], int max) {
 
+}
 
 // Find the patient array index by patient number (returns -1 if not found)
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
-
+int findPatientIndexByPatientNum(
+    int patientNumber, const struct Patient patient[], int max
+) {
+    return -1;
+}
 
 
 //////////////////////////////////////
@@ -234,7 +247,11 @@ void menuPatientEdit(struct Patient* patient)
 
 // Get user input for a new patient record
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
+void inputPatient(struct Patient* patient) {
 
+}
 
 // Get user input for phone contact information
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
+void inputPhoneData(struct Phone* phone) {
+}
