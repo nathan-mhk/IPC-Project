@@ -336,7 +336,14 @@ void searchPatientByPhoneNumber(const struct Patient patient[], int max) {
 // Get the next highest patient number
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 int nextPatientNumber(const struct Patient patient[], int max) {
+    int itr = 0, maxPatientNum = 0;
 
+    for (itr = 0; itr < max; ++itr) {
+        if (patient[itr].patientNumber > maxPatientNum) {
+            maxPatientNum = patient[itr].patientNumber;
+        }
+    }
+    return maxPatientNum + 1;
 }
 
 // Find the patient array index by patient number (returns -1 if not found)
