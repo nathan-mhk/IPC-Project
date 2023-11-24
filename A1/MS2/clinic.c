@@ -188,6 +188,16 @@ void menuPatientEdit(struct Patient* patient)
 // Display's all patient data in the FMT_FORM | FMT_TABLE format
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void displayAllPatients(const struct Patient patient[], int max, int fmt) {
+    if (!patient[0].patientNumber) {
+        int itr = 0;
+        for (itr = 0; itr < max; ++itr) {
+            if (!patient[itr].patientNumber) {
+                displayPatientData(&patient[itr], fmt);
+            }
+        }
+    } else {
+        printf("*** No records found ***\n");
+    }
 }
 
 // Search for a patient record based on patient number or phone number
