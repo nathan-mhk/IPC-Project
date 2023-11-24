@@ -384,4 +384,35 @@ void inputPatient(struct Patient* patient) {
 // Get user input for phone contact information
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void inputPhoneData(struct Phone* phone) {
+    int opt = 0;
+
+    printf("Phone Information\n");
+    printf("-----------------\n");
+    printf("How will the patient like to be contacted?\n");
+    printf("1. Cell\n");
+    printf("2. Home\n");
+    printf("3. Work\n");
+    printf("4. TBD\n");
+    printf("Selection: \n");
+    scanf("%d", &opt);
+
+    switch (opt) {
+        case 1:
+            phone->description = "CELL";
+            break;
+        case 2:
+            phone->description = "HOME";
+            break;
+        case 3:
+            phone->description = "WORK";
+            break;
+        default:
+            phone->description = "TBD";
+            phone->number = "(___)___-____";
+            return;
+    }
+    
+    printf("Contact: %s", phone->description);
+    printf("Number : ");
+    inputCString(phone->number, PHONE_LEN, PHONE_LEN);
 }
