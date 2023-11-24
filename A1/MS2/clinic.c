@@ -225,6 +225,17 @@ void searchPatientData(const struct Patient patient[], int max) {
 // Add a new patient record to the patient array
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void addPatient(struct Patient patient[], int max) {
+    int itr = 0;
+    
+    for (itr = 0; itr < max; ++itr) {
+        if (!patient[itr].patientNumber) {
+            patient[itr].patientNumber = nextPatientNumber(patient, max);
+            inputPatient(&patient[itr]);
+            printf("*** New patient record added ***\n");
+            return;
+        }
+    }
+    printf("ERROR: Patient listing is FULL!\n");
 }
 
 // Edit a patient record from the patient array
