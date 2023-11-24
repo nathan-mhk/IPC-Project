@@ -241,6 +241,17 @@ void addPatient(struct Patient patient[], int max) {
 // Edit a patient record from the patient array
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void editPatient(struct Patient patient[], int max) {
+    int patientNum = 0, index = 0;
+    
+    printf("Enter the patient number: ");
+    scanf("%d", &patientNum);
+
+    index = findPatientIndexByPatientNum(patientNum, patient, max);
+    if (index != -1) {
+        menuPatientEdit(&patient[index]);
+    } else {
+        printf("ERROR: Patient record not found!\n");
+    }
 }
 
 // Remove a patient record from the patient array
