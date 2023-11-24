@@ -351,6 +351,13 @@ int nextPatientNumber(const struct Patient patient[], int max) {
 int findPatientIndexByPatientNum(
     int patientNumber, const struct Patient patient[], int max
 ) {
+    int itr = 0;
+
+    for (itr = 0; itr < max; ++itr) {
+        if (patientNumber == patient[itr].patientNumber) {
+            return itr;
+        }
+    }
     return -1;
 }
 
