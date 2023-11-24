@@ -369,7 +369,16 @@ int findPatientIndexByPatientNum(
 // Get user input for a new patient record
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void inputPatient(struct Patient* patient) {
+    printf("Patient Data Input\n");
+    printf("------------------\n");
 
+    printf("Number: %05d", patient->patientNumber);
+    // inputCString(patient->phone.number, PHONE_LEN, PHONE_LEN);
+
+    printf("Name  : ");
+    inputCString(patient->name, 1, NAME_LEN);
+
+    inputPhoneData(&(patient->phone));
 }
 
 // Get user input for phone contact information
