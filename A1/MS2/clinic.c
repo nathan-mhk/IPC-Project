@@ -309,6 +309,28 @@ void searchPatientByPatientNumber(const struct Patient patient[], int max) {
 // Search and display patient records by phone number (tabular)
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void searchPatientByPhoneNumber(const struct Patient patient[], int max) {
+    char phoneNum[PHONE_LEN] = {"\0"};
+    int itr = 0, i = 0, match = 0, found = 0;
+
+    printf("Search by phone number: ");
+    inputCString(phoneNum, PHONE_LEN, PHONE_LEN);
+
+    displayPatientTableHeader();
+    
+    for (itr = 0; itr < max; ++itr) {
+        for (i = 0, match = 1; i < PHONE_LEN && match; ++i) {
+            if (patient[itr].phone.number[i] != phoneNum[i]) {
+                match = 0;
+            }
+        }
+        if (match) {
+            found = 1;
+            displayPatientData(&patient[itr], FMT_TABLE);
+        }
+    }
+    if (!found) {
+        printf("*** No records found ***\n");
+    }
 }
 
 // Get the next highest patient number
