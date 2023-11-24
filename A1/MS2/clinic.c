@@ -257,6 +257,32 @@ void editPatient(struct Patient patient[], int max) {
 // Remove a patient record from the patient array
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void removePatient(struct Patient patient[], int max) {
+    int patientNum = 0, index = 0;
+    char opt = '\0';
+    
+    printf("Enter the patient number: ");
+    scanf("%d", &patientNum);
+
+    index = findPatientIndexByPatientNum(patientNum, patient, max);
+
+    if (index != 1) {
+        displayPatientData(&patient[index], FMT_FORM);
+        printf("Are you sure you want to remove this patient record? (y/n): ");
+        scanf(" %c", &opt);
+
+        if (opt == 'Y' || opt == 'y') {
+            patient[index].name = "";
+            patient[index].patientNumber = 0;
+            patient[index].phone.description = "";
+            patient[index].phone.number = "";
+
+            printf("Patient record has been removed!\n");
+        } else {
+            printf("Operation aborted.\n");
+        }
+    } else {
+        printf("ERROR: Patient record not found!\n");
+    }
 }
 
 
