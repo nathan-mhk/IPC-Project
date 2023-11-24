@@ -39,35 +39,26 @@ void suspend(void) {
     putchar('\n');
 }
 
-// FIXME
-
 void displayFormattedPhone(const char* const str) {
     const int REQ_LEN = 10;
     const char* const validChars = "0123456789";
     const char* const invalidDisplay = "(___)___-____";
     
-    int len = 0;
-    int allDigits = 0, isDigit = 0;
+    int allDigits = 0;
     const char* itr = NULL;
-    const char* validChar = NULL;
 
-    if (str) {
+    if (str && strlen(str) == REQ_LEN) {
         for (
-            allDigits = 1, itr = str; 
-            *itr != '\0' && allDigits && len <= REQ_LEN; 
-            ++itr, ++len
+            allDigits = 1, itr = str;
+            *itr != '\0' && allDigits;
+            ++itr
         ) {
-            for(
-                isDigit = 0, validChar = validChars; 
-                *validChar != '\0' && !isDigit; 
-                ++validChar
-            ) {
-                isDigit = *itr == *validChar;
+            if (!strchr(validChars, *itr)) {
+                allDigits = 0;
             }
-            allDigits = allDigits && isDigit;
         }
         
-        if (len == REQ_LEN && allDigits) {
+        if (allDigits) {
             printf(
                 "(%c%c%c)%c%c%c-%c%c%c%c",
                 str[0], str[1], str[2], str[3], str[4],
@@ -137,24 +128,16 @@ int inputIntRange(const int min, const int max) {
 
 char inputCharOption(const char validChars[]) {
     char value = 0;
-    int i = 0;
     int repeat = 1;
 
     do {
         scanf(" %c", &value);
 
-        for (i = 0; validChars[i] != '\0'; ++i) {
-            if (value == validChars[i]) {
-                repeat = 0;
-            }
-        }
-        if (repeat) {
-            clearInputBuffer();
-            printf("ERROR: Character must be one of [");
-            for (i = 0; validChars[i] != '\0'; ++i) {
-                printf("%c", validChars[i]);
-            }
-            printf("]: ");
+        if (!strchr(validChars, value)) {
+            repeat = 1;
+            printf("ERROR: Character must be one of [%s]: ", validChars);
+        } else {
+            repeat = 0;
         }
     } while (repeat);
 
