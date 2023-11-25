@@ -145,21 +145,20 @@ char inputCharOption(const char validChars[]) {
 }
 
 void inputCString(char* const str, const int min, const int max) {
-    const char* const validChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM ";
+    const char* const validChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM 1234567890";
 
     char* itr = str;
-    const char* validChar = validChars;
     int len = 0;
     int repeat = 0, reset = 0, ueqLen = 0;
-    char alphbt = '\0';
+    char chr = '\0';
 
     do {
         repeat = 1;
-        scanf("%c", &alphbt);
+        scanf("%c", &chr);
 
         // Discard leading '\n'
-        // !(itr == str && alphbt == '\n')
-        if (itr != str || alphbt != '\n') {
+        // !(itr == str && chr == '\n')
+        if (itr != str || chr != '\n') {
             /**
              * Too short:
              *      '\n' && len < min
@@ -170,11 +169,11 @@ void inputCString(char* const str, const int min, const int max) {
              * Not equal:
              *      Any of above && min == max 
             */
-            repeat = alphbt != '\n';
+            repeat = chr != '\n';
             reset = 0;
             ueqLen = 0;
 
-            if (alphbt == '\n' && len < min) {
+            if (chr == '\n' && len < min) {
                 if (min == max) {
                     // Not equal
                     ueqLen = 1;
@@ -183,7 +182,7 @@ void inputCString(char* const str, const int min, const int max) {
                     reset = 1;
                     printf("ERROR: String length must be between %d and %d chars: ", min, max);
                 }
-            } else if ((alphbt == '\n' && len > max) || (alphbt != '\n' && len >= max)) {
+            } else if ((chr == '\n' && len > max) || (chr != '\n' && len >= max)) {
                 if (min == max) {
                     // Not equal
                     ueqLen = 1;
@@ -199,32 +198,27 @@ void inputCString(char* const str, const int min, const int max) {
                 printf("ERROR: String length must be exactly %d chars: ", min);
             }
 
-            // Assume always valid?
             if (!reset && repeat) {
                 // Check if input char is valid
-                reset = 1;
-                for (validChar = validChars; *validChar != '\0' && reset; ++validChar) {
-                    reset = alphbt != *validChar;
-                }
+                reset = !strchr(validChars, chr);
+
                 if (reset) {
                     printf("ERROR: Invalid character\n");
                 }
             }
 
             if (reset) {
-                for (itr = str; *itr != '\0'; ++itr) {
-                    *itr = '\0';
-                }
+                strncpy(str, "", max);
                 itr = str;
                 len = 0;
 
-                // alphbt != '\n'
+                // chr != '\n'
                 if (repeat) {
                     clearInputBuffer();
                 }
             } else if (repeat) {
                 // Prevent putting '\n' into the string
-                *itr = alphbt;
+                *itr = chr;
                 ++itr;
                 ++len;
             }
