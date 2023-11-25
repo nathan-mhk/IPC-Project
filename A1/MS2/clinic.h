@@ -41,15 +41,15 @@ piece of work is entirely of my own creation.
 // Data type: Phone
 // ToDo:
 struct Phone {
-    char description[PHONE_DESC_LEN];
-    char number[PHONE_LEN];
+    char description[PHONE_DESC_LEN + 1];
+    char number[PHONE_LEN + 1];
 };
 
 // Data type: Patient 
 // ToDo:
 struct Patient {
     int patientNumber;
-    char name[NAME_LEN];
+    char name[NAME_LEN + 1];
     struct Phone phone;
 };
 

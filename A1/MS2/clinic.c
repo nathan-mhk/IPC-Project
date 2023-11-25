@@ -14,6 +14,7 @@ piece of work is entirely of my own creation.
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
+#include <string.h>
 
 // include the user library "core" so we can use those functions
 #include "core.h"
@@ -188,10 +189,14 @@ void menuPatientEdit(struct Patient* patient)
 // Display's all patient data in the FMT_FORM | FMT_TABLE format
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void displayAllPatients(const struct Patient patient[], int max, int fmt) {
-    if (!patient[0].patientNumber) {
+    if (patient[0].patientNumber) {
+
         int itr = 0;
+
+        displayPatientTableHeader();
+
         for (itr = 0; itr < max; ++itr) {
-            if (!patient[itr].patientNumber) {
+            if (patient[itr].patientNumber) {
                 displayPatientData(&patient[itr], fmt);
             }
         }
@@ -205,21 +210,28 @@ void displayAllPatients(const struct Patient patient[], int max, int fmt) {
 void searchPatientData(const struct Patient patient[], int max) {
     int opt = 0;
 
-    printf("Search Options\n");
-    printf("==========================\n");
-    printf("1) By patient number\n");
-    printf("2) By phone number\n");
-    printf("..........................\n");
-    printf("0) Previous menu\n");
-    printf("..........................\n");
-    printf("Selection: ");
+    do {
+        printf("Search Options\n");
+        printf("==========================\n");
+        printf("1) By patient number\n");
+        printf("2) By phone number\n");
+        printf("..........................\n");
+        printf("0) Previous menu\n");
+        printf("..........................\n");
+        printf("Selection: ");
 
-    scanf("%d", &opt);
-    if (opt == 1) {
-        searchPatientByPatientNumber(patient, max);
-    } else if (opt == 2) {
-        searchPatientByPhoneNumber(patient, max);
-    }
+        opt = inputIntRange(0, 2);
+        
+        if (opt == 1) {
+            searchPatientByPatientNumber(patient, max);
+        } else if (opt == 2) {
+            searchPatientByPhoneNumber(patient, max);
+        }
+
+        if (opt) {
+            suspend();
+        }
+    } while (opt);
 }
 
 // Add a new patient record to the patient array
@@ -229,8 +241,11 @@ void addPatient(struct Patient patient[], int max) {
     
     for (itr = 0; itr < max; ++itr) {
         if (!patient[itr].patientNumber) {
+
             patient[itr].patientNumber = nextPatientNumber(patient, max);
+
             inputPatient(&patient[itr]);
+
             printf("*** New patient record added ***\n");
             return;
         }
@@ -244,9 +259,10 @@ void editPatient(struct Patient patient[], int max) {
     int patientNum = 0, index = 0;
     
     printf("Enter the patient number: ");
-    scanf("%d", &patientNum);
+    patientNum = inputIntPositive();
 
     index = findPatientIndexByPatientNum(patientNum, patient, max);
+
     if (index != -1) {
         menuPatientEdit(&patient[index]);
     } else {
@@ -261,20 +277,20 @@ void removePatient(struct Patient patient[], int max) {
     char opt = '\0';
     
     printf("Enter the patient number: ");
-    scanf("%d", &patientNum);
+    patientNum = inputIntPositive();
 
     index = findPatientIndexByPatientNum(patientNum, patient, max);
-
-    if (index != 1) {
+    if (index != -1) {
         displayPatientData(&patient[index], FMT_FORM);
-        printf("Are you sure you want to remove this patient record? (y/n): ");
-        scanf(" %c", &opt);
 
-        if (opt == 'Y' || opt == 'y') {
-            patient[index].name = "";
+        printf("Are you sure you want to remove this patient record? (y/n): ");
+        opt = inputCharOption("yn");
+
+        if (opt == 'y') {
+            strncpy(patient[index].name, "", NAME_LEN + 1);
             patient[index].patientNumber = 0;
-            patient[index].phone.description = "";
-            patient[index].phone.number = "";
+            strncpy(patient[index].phone.description, "", PHONE_DESC_LEN + 1);
+            strncpy(patient[index].phone.number, "", PHONE_LEN + 1);
 
             printf("Patient record has been removed!\n");
         } else {
@@ -296,7 +312,7 @@ void searchPatientByPatientNumber(const struct Patient patient[], int max) {
     int patientNum = 0, index = 0;
 
     printf("Search by patient number: ");
-    scanf("%d", &patientNum);
+    patientNum = inputIntPositive();
 
     index = findPatientIndexByPatientNum(patientNum, patient, max);
     if (index != -1) {
@@ -309,8 +325,8 @@ void searchPatientByPatientNumber(const struct Patient patient[], int max) {
 // Search and display patient records by phone number (tabular)
 // (ToDo: PUT THE FUNCTION DEFINITION BELOW)
 void searchPatientByPhoneNumber(const struct Patient patient[], int max) {
-    char phoneNum[PHONE_LEN] = {"\0"};
-    int itr = 0, i = 0, match = 0, found = 0;
+    char phoneNum[PHONE_LEN + 1] = {"\0"};
+    int itr = 0, found = 0;
 
     printf("Search by phone number: ");
     inputCString(phoneNum, PHONE_LEN, PHONE_LEN);
@@ -318,12 +334,7 @@ void searchPatientByPhoneNumber(const struct Patient patient[], int max) {
     displayPatientTableHeader();
     
     for (itr = 0; itr < max; ++itr) {
-        for (i = 0, match = 1; i < PHONE_LEN && match; ++i) {
-            if (patient[itr].phone.number[i] != phoneNum[i]) {
-                match = 0;
-            }
-        }
-        if (match) {
+        if (!strcmp(patient[itr].phone.number, phoneNum)) {
             found = 1;
             displayPatientData(&patient[itr], FMT_TABLE);
         }
@@ -372,8 +383,7 @@ void inputPatient(struct Patient* patient) {
     printf("Patient Data Input\n");
     printf("------------------\n");
 
-    printf("Number: %05d", patient->patientNumber);
-    // inputCString(patient->phone.number, PHONE_LEN, PHONE_LEN);
+    printf("Number: %05d\n", patient->patientNumber);
 
     printf("Name  : ");
     inputCString(patient->name, 1, NAME_LEN);
@@ -393,26 +403,25 @@ void inputPhoneData(struct Phone* phone) {
     printf("2. Home\n");
     printf("3. Work\n");
     printf("4. TBD\n");
-    printf("Selection: \n");
-    scanf("%d", &opt);
+    printf("Selection: ");
+    opt = inputIntRange(1, 5);
 
     switch (opt) {
         case 1:
-            phone->description = "CELL";
+            strncpy(phone->description, "CELL", PHONE_DESC_LEN + 1);
             break;
         case 2:
-            phone->description = "HOME";
+            strncpy(phone->description, "HOME", PHONE_DESC_LEN + 1);
             break;
         case 3:
-            phone->description = "WORK";
+            strncpy(phone->description, "WORK", PHONE_DESC_LEN + 1);
             break;
         default:
-            phone->description = "TBD";
-            phone->number = "(___)___-____";
+            strncpy(phone->description, "TBD", PHONE_DESC_LEN + 1);
             return;
     }
     
-    printf("Contact: %s", phone->description);
+    printf("Contact: %s\n", phone->description);
     printf("Number : ");
     inputCString(phone->number, PHONE_LEN, PHONE_LEN);
 }

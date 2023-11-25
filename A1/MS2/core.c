@@ -132,6 +132,7 @@ char inputCharOption(const char validChars[]) {
 
     do {
         scanf(" %c", &value);
+        clearInputBuffer();
 
         if (!strchr(validChars, value)) {
             repeat = 1;
