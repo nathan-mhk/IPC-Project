@@ -564,11 +564,80 @@ void inputPhoneData(struct Phone* phone) {
 // Import patient data from file into a Patient array (returns # of records read)
 /// ToDo:
 int importPatients(const char* datafile, struct Patient patients[], int max) {
-    return 0;
+    FILE* fp = NULL;
+
+    int itr = 0, res = 0;
+
+    int patientNum = 0;
+    char name[NAME_LEN + 1] = { '\0' };
+    char desc[PHONE_DESC_LEN + 1] = { '\0' };
+    char num[PHONE_LEN + 1] = { '\0' };
+
+    fp = fopen(datafile, "r");
+
+    if (!fp) {
+        printf("ERR Failed to open file\n");
+        return 0;
+    }
+
+    do {
+        res = fscanf(fp, "%d|%[^|\n]|%[^|\n]|%[^\r\n]", &patientNum, name, desc, num);
+
+        if (res == TBD_PHONE || res == VLD_PHONE) {
+
+            patients[itr].patientNumber = patientNum;
+            strncpy(patients[itr].name, name, NAME_LEN + 1);
+            strncpy(patients[itr].phone.description, desc, PHONE_DESC_LEN + 1);
+
+            if (res == TBD_PHONE) {
+                strncpy(num, "", PHONE_LEN + 1);
+            }
+            strncpy(patients[itr].phone.number, num, PHONE_LEN + 1);
+        }
+    } while (res > 0 && ++itr < max);
+
+    fclose(fp);
+    return itr;
 }
 
 // Import appointment data from file into an Appointment array (returns # of records read)
 // ToDo:
 int importAppointments(const char* datafile, struct Appointment appoints[], int max) {
-    return 0;
+    FILE* fp = NULL;
+
+    int itr = 0, res = 0;
+
+    int patientNum = 0;
+    int year = 0, month = 0, day = 0;
+    int hour = 0, min = 0;
+
+    fp = fopen(datafile, "r");
+
+    if (!fp) {
+        printf("ERR Failed to open file\n");
+        return 0;
+    }
+
+    do {
+        res = fscanf(
+            fp, "%d,%d,%d,%d,%d,%d",
+            &patientNum,
+            &year, &month, &day,
+            &hour, &min
+        );
+
+        if (res > 0) {
+            appoints[itr].patientNumber = patientNum;
+
+            appoints[itr].time.hour = hour;
+            appoints[itr].time.min = min;
+
+            appoints[itr].date.year = year;
+            appoints[itr].date.month = month;
+            appoints[itr].date.day = day;
+        }
+    } while (res > 0 && ++itr < max);
+
+    fclose(fp);
+    return itr;
 }

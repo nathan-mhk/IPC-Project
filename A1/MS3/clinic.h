@@ -32,6 +32,8 @@ piece of work is entirely of my own creation.
 #define NAME_LEN 15
 #define PHONE_DESC_LEN 4
 #define PHONE_LEN 10
+#define TBD_PHONE 3
+#define VLD_PHONE 4
 
 
 // MS#3 Additional macro's:
