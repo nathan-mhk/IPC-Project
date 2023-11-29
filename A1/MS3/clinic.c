@@ -400,7 +400,41 @@ void removePatient(struct Patient patient[], int max) {
 // View ALL scheduled appointments
 // Todo:
 void viewAllAppointments(const struct ClinicData* const data) {
-    // TODO
+    int itr = 0, aItr = 0, pItr = 0, nextAppnt = 0;
+    int aptPatNum = 0;
+
+    const struct Appointment* appoints[MAX_APPOINTMENTS] = { NULL };
+    const struct Patient* patients[MAX_APPOINTMENTS] = { NULL };
+
+    const struct Appointment* appoint = NULL;
+    const struct Patient* patient = NULL;
+
+    displayScheduleTableHeader(NULL, 1);
+
+    for (aItr = 0; aItr < MAX_APPOINTMENTS; ++aItr) {
+        
+        appoint = (data->appointments) + aItr;
+        aptPatNum = appoint->patientNumber;
+
+        for (pItr = 0, nextAppnt = 0; pItr < MAX_PETS && !nextAppnt; ++pItr) {
+
+            patient = data->patients + pItr;
+
+            if (patient->patientNumber == aptPatNum) {
+                nextAppnt = 1;
+                appoints[itr] = appoint;
+                patients[itr] = patient;
+                ++itr;
+            }
+        }
+    }
+
+    sortAppointmentsByDate(appoints, patients, itr);
+
+    for (aItr = 0; aItr < itr; ++aItr) {
+        displayScheduleData(patients[aItr], appoints[aItr], 1);
+    }
+    putchar('\n');
 }
 
 // View appointment schedule for the user input date
