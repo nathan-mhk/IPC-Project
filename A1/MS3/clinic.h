@@ -61,15 +61,26 @@ struct Patient {
 
 // Data type: Time
 // ToDo:
-
+struct Time {
+    int hour;
+    int min;
+};
 
 // Data type: Date
 // ToDo:
-
+struct Date {
+    int year;
+    int month;
+    int day;
+};
 
 // Data type: Appointment
 // ToDo:
-
+struct Appointment {
+    int patientNumber;
+    struct Time time;
+    struct Date date;
+};
 
 
 // ClinicData type: Provided to student
@@ -141,20 +152,25 @@ void removePatient(struct Patient patient[], int max);
 
 // View ALL scheduled appointments
 // Todo:
-
+void viewAllAppointments(const struct ClinicData* const data);
 
 // View appointment schedule for the user input date
 // Todo:
-
+void viewAppointmentSchedule(const struct ClinicData* const data);
 
 // Add an appointment record to the appointment array
 // Todo:
-
+void addAppointment(
+    struct Appointment* const appoint, const int maxAppoint,
+    const struct Patient* const patient, const int maxPatient
+);
 
 // Remove an appointment record from the appointment array
 // Todo:
-
-
+void removeAppointment(
+    struct Appointment* const appoint, const int maxAppoint,
+    const struct Patient* const patient, const int maxPatient
+);
 
 //////////////////////////////////////
 // UTILITY FUNCTIONS

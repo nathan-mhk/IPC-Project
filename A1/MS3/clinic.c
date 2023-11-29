@@ -399,19 +399,33 @@ void removePatient(struct Patient patient[], int max) {
 
 // View ALL scheduled appointments
 // Todo:
-
+void viewAllAppointments(const struct ClinicData* const data) {
+    // TODO
+}
 
 // View appointment schedule for the user input date
 // Todo:
-
+void viewAppointmentSchedule(const struct ClinicData* const data) {
+    // TODO
+}
 
 // Add an appointment record to the appointment array
 // Todo:
-
+void addAppointment(
+    struct Appointment* const appoint, const int maxAppoint,
+    const struct Patient* const patient, const int maxPatient
+) {
+    // TODO
+}
 
 // Remove an appointment record from the appointment array
 // Todo:
-
+void removeAppointment(
+    struct Appointment* const appoint, const int maxAppoint,
+    const struct Patient* const patient, const int maxPatient
+) {
+    // TODO
+}
 
 //////////////////////////////////////
 // UTILITY FUNCTIONS
@@ -549,7 +563,12 @@ void inputPhoneData(struct Phone* phone) {
 
 // Import patient data from file into a Patient array (returns # of records read)
 /// ToDo:
-
+int importPatients(const char* datafile, struct Patient patients[], int max) {
+    return 0;
+}
 
 // Import appointment data from file into an Appointment array (returns # of records read)
 // ToDo:
+int importAppointments(const char* datafile, struct Appointment appoints[], int max) {
+    return 0;
+}
