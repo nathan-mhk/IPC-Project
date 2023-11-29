@@ -1,9 +1,9 @@
 /*/////////////////////////////////////////////////////////////////////////
                         Assignment 1 - Milestone 3
-Full Name  :
-Student ID#:
-Email      :
-Section    :
+Full Name  : Nathan Kong
+Student ID#: 150950236
+Email      : nkong@myseneca.ca
+Section    : NDD
 
 Authenticity Declaration:
 I declare this submission is the result of my own work and has not been
@@ -44,10 +44,18 @@ piece of work is entirely of my own creation.
 
 // Data type: Phone
 // (Copy your code from MS#2)
-
+struct Phone {
+    char description[PHONE_DESC_LEN + 1];
+    char number[PHONE_LEN + 1];
+};
 
 // Data type: Patient 
 // (Copy your code from MS#2)
+struct Patient {
+    int patientNumber;
+    char name[NAME_LEN + 1];
+    struct Phone phone;
+};
 
 // ------------------- MS#3 -------------------
 
