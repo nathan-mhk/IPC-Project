@@ -92,7 +92,6 @@ int inputInt() {
             printf("Error! Input a whole number: ");
         }
     }
-
     return value;
 }
 

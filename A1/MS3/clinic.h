@@ -42,6 +42,10 @@ piece of work is entirely of my own creation.
 #define MAX_PETS 20
 #define MAX_APPOINTMENTS 50
 
+#define MIN_MON 1
+#define MAX_MON 12
+#define MIN_DAY 1
+
 #define JAN 1
 #define FEB 2
 #define MAR 3
@@ -65,6 +69,17 @@ piece of work is entirely of my own creation.
 #define JUN_DAYS 30
 #define SEP_DAYS 30
 #define NOV_DAYS 30
+
+#define MIN_HR 0
+#define MAX_HR 23
+#define MIN_MIN 0
+#define MAX_MIN 59
+
+#define STR_HR 10
+#define STR_MIN 0
+#define END_HR 14
+#define END_MIN 0
+#define APPMNT_INTV 30
 
 
 //////////////////////////////////////
@@ -218,18 +233,24 @@ int nextPatientNumber(const struct Patient patient[], int max);
 int findPatientIndexByPatientNum(int patientNumber,
                                  const struct Patient patient[], int max);
 
+// Additional Custom Function
+// Merge two sorted half arrays together
 void merge(
     const struct Appointment* appoints[], 
     const struct Patient* patients[],
     const int minIndex, const int midIndex, const int maxIndex
 );
 
+// Additional Custom Function
+// Sort the appointments by date in ascending order
 void sortAppointmentsByDate(
     const struct Appointment* appoints[], 
     const struct Patient* patients[],
     const int minIndex, const int maxIndex
 );
 
+// Additional Custom Function
+// Wrapper for sortAppointmentsByDate() and displaying appointments
 void sortAndDisplayAppointments(
     const struct Appointment* appoints[], 
     const struct Patient* patients[],
@@ -237,6 +258,13 @@ void sortAndDisplayAppointments(
     const int includeDateField
 );
 
+// Additional Custom Function
+// Check if the given timeslot is occupied (same YYYY-MM-DD HH:MM)
+int timeslotOccupied(
+    const struct Appointment* const currAppoints,
+    const struct Appointment* const newAppoint,
+    const int maxAppoint
+);
 
 //////////////////////////////////////
 // USER INPUT FUNCTIONS
@@ -248,8 +276,20 @@ void inputPatient(struct Patient* patient);
 // Get user input for phone contact information
 void inputPhoneData(struct Phone* phone);
 
-void inputDate(struct Date* date);
+// Additional Custom Function
+// Get user input for date information (YYYY-MM-DD)
+void inputDate(struct Date* const date);
 
+// Additional Custom Function
+void inputTime(struct Time* const time);
+
+// Additional Custom Function
+// Get user input for time information (HH:MM)
+void inputTimeslot(
+    const struct Appointment* const currAppoints,
+    struct Appointment* const newAppoint,
+    const int maxAppoint
+);
 
 //////////////////////////////////////
 // FILE FUNCTIONS
