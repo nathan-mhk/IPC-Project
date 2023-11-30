@@ -92,9 +92,9 @@ struct Appointment {
 // !!! DO NOT MODIFY THIS DATA TYPE !!!
 struct ClinicData
 {
-    struct Patient* patients;
+    struct Patient* patients;           // Patients[]
     int maxPatient;
-    struct Appointment* appointments;
+    struct Appointment* appointments;       // Appointment[]
     int maxAppointments;
 };
 
@@ -204,6 +204,13 @@ void sortAppointmentsByDate(
     const struct Appointment* appoints[], 
     const struct Patient* patients[],
     const int minIndex, const int maxIndex
+);
+
+void sortAndDisplayAppointments(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int numRecords,
+    const int includeDateField
 );
 
 

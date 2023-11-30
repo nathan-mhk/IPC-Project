@@ -400,8 +400,8 @@ void removePatient(struct Patient patient[], int max) {
 // View ALL scheduled appointments
 // Todo:
 void viewAllAppointments(const struct ClinicData* const data) {
-    int itr = 0, aItr = 0, pItr = 0, nxtAppoint = 0;
-    int aptPatNum = 0;
+    int itr = 0, dataItr = 0;
+    int aptPatNum = 0, patIndex = 0;
 
     // Both arrays might not be full
     const struct Appointment* appoints[MAX_APPOINTMENTS] = { NULL };
@@ -412,36 +412,62 @@ void viewAllAppointments(const struct ClinicData* const data) {
 
     displayScheduleTableHeader(NULL, 1);
 
-    for (aItr = 0; aItr < MAX_APPOINTMENTS; ++aItr) {
+    for (dataItr = 0; dataItr < MAX_APPOINTMENTS; ++dataItr) {
         
-        appoint = (data->appointments) + aItr;
+        appoint = (data->appointments) + dataItr;
+
+
         aptPatNum = appoint->patientNumber;
 
-        for (pItr = 0, nxtAppoint = 0; pItr < MAX_PETS && !nxtAppoint; ++pItr) {
+        patIndex = findPatientIndexByPatientNum(aptPatNum, data->patients, MAX_PETS);
 
-            patient = (data->patients) + pItr;
-
-            if (patient->patientNumber == aptPatNum) {
-                nxtAppoint = 1;
-                appoints[itr] = appoint;
-                patients[itr] = patient;
-                ++itr;
-            }
+        if (patIndex != -1) {
+            appoints[itr] = appoint;
+            patients[itr] = (data->patients) + patIndex;
+            ++itr;
         }
     }
-
-    sortAppointmentsByDate(appoints, patients, 0, itr - 1);
-
-    for (aItr = 0; aItr < itr; ++aItr) {
-        displayScheduleData(patients[aItr], appoints[aItr], 1);
-    }
-    putchar('\n');
+    sortAndDisplayAppointments(appoints, patients, itr, 1);
 }
 
 // View appointment schedule for the user input date
 // Todo:
 void viewAppointmentSchedule(const struct ClinicData* const data) {
-    // TODO
+    struct Date* const date = { 0, 0, 0 };
+    int itr = 0, dataItr = 0;
+    int aptPatNum = 0, patIndex = 0;
+
+    // Both arrays might not be full
+    const struct Appointment* appoints[MAX_APPOINTMENTS] = { NULL };
+    const struct Patient* patients[MAX_APPOINTMENTS] = { NULL };
+
+    const struct Appointment* appoint = NULL;
+    const struct Patient* patient = NULL;
+
+    inputDate(date);
+    displayScheduleTableHeader(date, 0);
+
+    for (dataItr = 0; dataItr < MAX_APPOINTMENTS; ++dataItr) {
+        
+        appoint = (data->appointments) + dataItr;
+
+        if (
+            appoint->date.year == date->year &&
+            appoint->date.month == date->month &&
+            appoint->date.day == date->day
+        ) {
+            aptPatNum = appoint->patientNumber;
+
+            patIndex = findPatientIndexByPatientNum(aptPatNum, data->patients, MAX_PETS);
+
+            if (patIndex != -1) {
+                appoints[itr] = appoint;
+                patients[itr] = (data->patients) + patIndex;
+                ++itr;
+            }
+        }
+    }
+    sortAndDisplayAppointments(appoints, patients, itr, 0);
 }
 
 // Add an appointment record to the appointment array
@@ -650,6 +676,21 @@ void sortAppointmentsByDate(
     }
 }
 
+void sortAndDisplayAppointments(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int numRecords,
+    const int includeDateField
+) {
+    int itr = 0;
+
+    sortAppointmentsByDate(appoints, patients, 0, numRecords - 1);
+
+    for (itr = 0; itr < numRecords; ++itr) {
+        displayScheduleData(patients[itr], appoints[itr], includeDateField);
+    }
+    putchar('\n');
+}
 
 //////////////////////////////////////
 // USER INPUT FUNCTIONS
