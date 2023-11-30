@@ -400,9 +400,10 @@ void removePatient(struct Patient patient[], int max) {
 // View ALL scheduled appointments
 // Todo:
 void viewAllAppointments(const struct ClinicData* const data) {
-    int itr = 0, aItr = 0, pItr = 0, nextAppnt = 0;
+    int itr = 0, aItr = 0, pItr = 0, nxtAppoint = 0;
     int aptPatNum = 0;
 
+    // Both arrays might not be full
     const struct Appointment* appoints[MAX_APPOINTMENTS] = { NULL };
     const struct Patient* patients[MAX_APPOINTMENTS] = { NULL };
 
@@ -416,12 +417,12 @@ void viewAllAppointments(const struct ClinicData* const data) {
         appoint = (data->appointments) + aItr;
         aptPatNum = appoint->patientNumber;
 
-        for (pItr = 0, nextAppnt = 0; pItr < MAX_PETS && !nextAppnt; ++pItr) {
+        for (pItr = 0, nxtAppoint = 0; pItr < MAX_PETS && !nxtAppoint; ++pItr) {
 
-            patient = data->patients + pItr;
+            patient = (data->patients) + pItr;
 
             if (patient->patientNumber == aptPatNum) {
-                nextAppnt = 1;
+                nxtAppoint = 1;
                 appoints[itr] = appoint;
                 patients[itr] = patient;
                 ++itr;
@@ -429,7 +430,7 @@ void viewAllAppointments(const struct ClinicData* const data) {
         }
     }
 
-    sortAppointmentsByDate(appoints, patients, itr);
+    sortAppointmentsByDate(appoints, patients, 0, itr - 1);
 
     for (aItr = 0; aItr < itr; ++aItr) {
         displayScheduleData(patients[aItr], appoints[aItr], 1);
@@ -531,6 +532,122 @@ int findPatientIndexByPatientNum(
         }
     }
     return -1;
+}
+
+void merge(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int minIndex, const int midIndex, const int maxIndex
+) {
+    // Sorted LHS: [minIndex, midIndex]
+    // Sorted RHS: (midIndex, maxIndex]
+    int itrL = minIndex;
+    int itrR = midIndex + 1;
+    int left = 0, skip = 0;
+
+    const struct Date* dateL = NULL;
+    const struct Time* timeL = NULL;
+    const struct Date* dateR = NULL;
+    const struct Time* timeR = NULL;
+
+    const int tmpArrSize = maxIndex - minIndex + 1;
+    const struct Appointment* tmpAppoints[tmpArrSize];
+    const struct Patient* tempPatients[tmpArrSize];
+    int itr = 0, tmpItr = 0;
+
+    // Sort each half into a temp array
+    for (tmpItr = 0; tmpItr < tmpArrSize; ++tmpItr) {
+
+        // LHS exhausted
+        if (itrL > midIndex) {
+            left = 0;
+            skip = 1;
+        }
+
+        // RHS exhausted
+        if (itrR > maxIndex) {
+            left = 1;
+            skip = 1;
+        }
+
+        // Comparison: YYYY->MM->DD->HH->MM
+        if (!skip) {
+            dateL = &(appoints[itrL]->date);
+            dateR = &(appoints[itrR]->date);
+
+            timeL = &(appoints[itrL]->time);
+            timeR = &(appoints[itrR]->time);
+
+            if (dateL->year < dateR->year) {
+                left = 1;
+
+            } else if (dateL->year > dateR->year) {
+                left = 0;
+
+            } else if (dateL->month < dateR->month) {
+                left = 1;
+
+            } else if (dateL->month > dateR->month) {
+                left = 0;
+
+            } else if (dateL->day < dateR->day) {
+                left = 1;
+
+            } else if (dateL->day > dateR->day) {
+                left = 0;
+
+            } else if (timeL->hour < timeR->hour) {
+                left = 1;
+
+            } else if (timeL->hour > timeR->hour) {
+                left = 0;
+
+            } else if (timeL->min < timeR->min) {
+                left = 1;
+
+            } else /* if (timeL->min > timeR->min) */ {
+                left = 0;
+            }
+        }
+
+        if (left) {
+            tmpAppoints[tmpItr] = appoints[itrL];
+            tempPatients[tmpItr] = patients[itrL];
+            ++itrL;
+        } else {
+            tmpAppoints[tmpItr] = appoints[itrR];
+            tempPatients[tmpItr] = patients[itrR];
+            ++itrR;
+        }
+    }
+
+    // "Copy" the temp array back
+    for (tmpItr = 0, itr = minIndex; tmpItr < tmpArrSize; ++tmpItr, ++itr) {
+        appoints[itr] = tmpAppoints[tmpItr];
+        patients[itr] = tempPatients[tmpItr];
+    }
+}
+
+void sortAppointmentsByDate(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int minIndex, const int maxIndex
+) {
+    int midIndex = 0;
+
+    if (minIndex < maxIndex) {
+
+        midIndex = minIndex + (maxIndex - minIndex) / 2;
+
+        // Sort LHS [minIndex, midIndex]
+        sortAppointmentsByDate(appoints, patients, minIndex, midIndex);
+
+        // Sort RHS (midIndex, maxIndex]
+        sortAppointmentsByDate(appoints, patients, midIndex + 1, maxIndex);
+
+        // Merge the two sorted halves tgt
+        merge(appoints, patients, minIndex, midIndex, maxIndex);
+    }
 }
 
 

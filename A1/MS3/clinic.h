@@ -194,6 +194,18 @@ int nextPatientNumber(const struct Patient patient[], int max);
 int findPatientIndexByPatientNum(int patientNumber,
                                  const struct Patient patient[], int max);
 
+void merge(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int minIndex, const int midIndex, const int maxIndex
+);
+
+void sortAppointmentsByDate(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int minIndex, const int maxIndex
+);
+
 
 //////////////////////////////////////
 // USER INPUT FUNCTIONS
