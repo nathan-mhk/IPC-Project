@@ -408,7 +408,6 @@ void viewAllAppointments(const struct ClinicData* const data) {
     const struct Patient* patients[MAX_APPOINTMENTS] = { NULL };
 
     const struct Appointment* appoint = NULL;
-    const struct Patient* patient = NULL;
 
     displayScheduleTableHeader(NULL, 1);
 
@@ -433,7 +432,7 @@ void viewAllAppointments(const struct ClinicData* const data) {
 // View appointment schedule for the user input date
 // Todo:
 void viewAppointmentSchedule(const struct ClinicData* const data) {
-    struct Date* const date = { 0, 0, 0 };
+    struct Date date = { 0, 0, 0 };
     int itr = 0, dataItr = 0;
     int aptPatNum = 0, patIndex = 0;
 
@@ -442,19 +441,18 @@ void viewAppointmentSchedule(const struct ClinicData* const data) {
     const struct Patient* patients[MAX_APPOINTMENTS] = { NULL };
 
     const struct Appointment* appoint = NULL;
-    const struct Patient* patient = NULL;
 
-    inputDate(date);
-    displayScheduleTableHeader(date, 0);
+    inputDate(&date);
+    displayScheduleTableHeader(&date, 0);
 
     for (dataItr = 0; dataItr < MAX_APPOINTMENTS; ++dataItr) {
         
         appoint = (data->appointments) + dataItr;
 
         if (
-            appoint->date.year == date->year &&
-            appoint->date.month == date->month &&
-            appoint->date.day == date->day
+            appoint->date.year == date.year &&
+            appoint->date.month == date.month &&
+            appoint->date.day == date.day
         ) {
             aptPatNum = appoint->patientNumber;
 
@@ -748,6 +746,51 @@ void inputPhoneData(struct Phone* phone) {
     putchar('\n');
 }
 
+void inputDate(struct Date* date) {
+    int dInM = 0;
+
+    printf("Year        : ");
+    date->year = inputIntPositive();
+
+    printf("Month (%d-%d): ", JAN, DEC);
+    date->month = inputIntRange(JAN, DEC);
+
+    switch (date->month) {
+        case JAN:
+        case MAR:
+        case MAY:
+        case JUL:
+        case AUG:
+        case OCT:
+        case DEC:
+            dInM = DAYS_31;
+            break;
+        case APR:
+        case JUN:
+        case SEP:
+        case NOV:
+            dInM = DAYS_30;
+            break;
+        case FEB:
+            // Every year that is exactly divisible by four is a leap year, 
+            // except for years that are exactly divisible by 100, 
+            // but these centurial years are leap years if 
+            // they are exactly divisible by 400
+            if (
+                date->year % 4 == 0 &&
+                (date->year % 100 != 0 || date->year % 400 == 0)
+            ) {
+                dInM = FEB_DAYS_LEAP;
+            } else {
+                dInM = FEB_DAYS;
+            }
+            break;
+    }
+    printf("Day (1-%d)  : ", dInM);
+    date->day = inputIntRange(1, dInM);
+    
+    putchar('\n');
+}
 
 //////////////////////////////////////
 // FILE FUNCTIONS

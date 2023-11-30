@@ -42,6 +42,30 @@ piece of work is entirely of my own creation.
 #define MAX_PETS 20
 #define MAX_APPOINTMENTS 50
 
+#define JAN 1
+#define FEB 2
+#define MAR 3
+#define APR 4
+#define MAY 5
+#define JUN 6
+#define JUL 7
+#define AUG 8
+#define SEP 9
+#define OCT 10
+#define NOV 11
+#define DEC 12
+
+#define DAYS_31 31
+#define DAYS_30 30
+
+#define FEB_DAYS 28
+#define FEB_DAYS_LEAP 29
+
+#define APR_DAYS 30
+#define JUN_DAYS 30
+#define SEP_DAYS 30
+#define NOV_DAYS 30
+
 
 //////////////////////////////////////
 // Structures
@@ -224,7 +248,7 @@ void inputPatient(struct Patient* patient);
 // Get user input for phone contact information
 void inputPhoneData(struct Phone* phone);
 
-
+void inputDate(struct Date* date);
 
 
 //////////////////////////////////////
