@@ -1,0 +1,143 @@
+/*/////////////////////////////////////////////////////////////////////////
+                        Assignment 1 - Milestone 3
+Full Name  : Nathan Kong
+Student ID#: 150950236
+Email      : nkong@myseneca.ca
+Section    : NDD
+
+Authenticity Declaration:
+I declare this submission is the result of my own work and has not been
+shared with any other student or 3rd party content provider. This submitted
+piece of work is entirely of my own creation.
+/////////////////////////////////////////////////////////////////////////*/
+
+1.
+Additional Custom Function 1:
+                void sortAppointmentsByDate(
+                    const struct Appointment* appoints[], 
+                    const struct Patient* patients[],
+                    const int minIndex, const int maxIndex
+                );
+Explanation:
+It was noted in the PDF that the appointments displayed are not the in same 
+order as it is stored in the array. After examining the sample output file, 
+I learned that appointments shall be displayed in ascending order with 
+respect to their date, in the order of year->month->day->hour->min. To 
+improve the program's cohesion, it is important to create a separate 
+function to perform the sorting. It is also a good idea to separate the 
+sorting function from the parent viewAllAppointments() function as it had to 
+handle the matching between each appointment's patient number and the 
+corresponding patient's information already. Eventually, I wrote about 100 
+lines of code in the sorting function. If this whole thing is embedded 
+inside viewAllAppointments(), the program will be difficult to read and 
+maintain.
+
+-----------------------------------------------------------------------------
+
+Additional Custom Function 2:
+                int getAppointIndex(
+                    const struct Appointment* const appoints,
+                    const int maxAppoint,
+                    const int patientNum,
+                    const struct Date* const date
+                );
+Explanation:
+This function has a similar idea to findPatientIndexByPatientNum(). In my 
+implementation of removeAppointment(), there are 2 occasions where I have to 
+find the index of an appointment in the appointment array. First, I have to 
+know if there exists any appointment for a given patient number. Next, I have 
+to find out the index of the exact appointment that the user would like to 
+remove based on the date input. The second step is essential as upon 
+observing the appointmentData.txt, it is possible to have multiple 
+appointments with identical patient number. As a result, instead of coding 
+two blocks of code that performs the exact same task of extracting the index, 
+I have decided to decouple them into a separate helper function. Although at 
+this moment there is only one function using this helper function, if we 
+would like to include extra features like editing appointments in the future, 
+having a function designed for retrieving the index of an appointment will be 
+very useful. 
+
+-----------------------------------------------------------------------------
+
+Additional Custom Function 3:
+                void inputPhoneNum(char phoneNum[]);
+Explanation:
+Before milestone 3, I have been using inputCString() to handle the input of 
+phone numbers. However, from the sample output, a different error messages 
+implies that there should be another function that handles this task. Besides 
+this, it also makes sense to create an additional function to differentiate 
+between the functionality of handling string input and phone number input. 
+This is because the error messages that inputCString() could generate - 
+"String length must be exactly 10 chars" - is not suitable as an error 
+message for invalid phone numbers. inputCString() should be handling general 
+texts instead. Eventually, my implementation of inputPhoneNum() is kind of a 
+stripped down, more refined/restricted version of inputCString(). For 
+instance, the latter can accept a range of acceptable length of characters, 
+while the former only accepts an exact length of digits. The former has a 
+narrower range of acceptable characters (digits), whereas the latter can be a 
+mix of letters and digits. This function is also where the one and only one 
+scanf() call occurred.
+
+=============================================================================
+
+2. 
+First, for improved modularity. It is a good program design to develop a 
+separate module specifically for handling user inputs. In fact, I think it 
+would be even better to create a "utilities" module for all those utility 
+functions; a "display" module for all handling the display of user interfaces 
+(like menu items, data entries, etc); a "patient" module for all 
+patient-related functions; and an "appointment" module for all 
+appointment-related functions.
+
+Second, for improved reusability. By grouping scanf() calls into a separate 
+module, it allows other modules to use these functions by simply including 
+its header file. Let's say there is a new "doctor" module to be developed. If 
+these functions are all written within the clinic module, "doctor" module 
+will have to include all other unrelated/useless functions for it just to use 
+those input functions.
+
+Third, for improved maintainability. By separating them into another module, 
+it allows us to easily modify, test, and debug these input functions. 
+Speaking from personal experience, there are some occasions where I have to 
+revisit and modify these milestone 1 functions to match their expected 
+functionality while working on milestone 2 and 3. Separating them into 
+another module allows me to easily isolate the problem and test out the 
+changes. 
+
+Finally, for improved cooperation. Let's say there is another developer whose 
+role is to implement user input functions, whereas my role is to implement 
+all remaining functions. If these two parts were all within the same module, 
+it will be much more difficult for us to collaborate and organize the code.
+
+=============================================================================
+
+3.
+All additional custom functions I implemented were placed in the clinic 
+module. The greatest factor that contributed towards this decision is the 
+function signature. All but one function signatures include data structures 
+that are only available within the clinic module, i.e. Appointment, Patient, 
+Date, and Time. As these data structures are all defined within the clinic 
+header file, they cannot be implemented within the core module, despite them 
+being more suitable to be put into a separate module.
+
+Another factor is the macros that were used within the function. The only 
+function whose signature does not use any clinic module's data structure is 
+inputPhoneNum(), as shown in the answer to the first question. However, since 
+the macro of the length of the phone number is defined, once again, within 
+the clinic module, I have decided to not move this function to the core 
+module. A potential solution is to define the same macro within the core 
+module, then move this function there. However, this makes it harder to 
+maintain the program if the value of the macro were to be changed. Therefore, 
+because this function uses one of the macros defined in the clinic module, I 
+have decided to place the function within the same module as the macro.
+
+However, let's say there is now a header file called "macros", where all 
+macros were defined in. I will then move the inputPhoneNum() function to the 
+core module, and #include this "macros" header file in both clinic module and 
+core module. This is because inputPhoneNum() is essentially a user-input 
+function, which is more suitable to be put together alongside other 
+user-input functions. If, in addition, there is now a new "utils" module, I 
+will then move sortAppointmentsByDate() and getAppointIndex() to this new 
+module, and #include the "macros" header file in the "utils" module. This is 
+because these two functions are more of a utility functions, which is more 
+suitable to be put together.

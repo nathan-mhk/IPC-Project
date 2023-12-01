@@ -132,10 +132,10 @@ char inputCharOption(const char validChars[]) {
 
     do {
         scanf(" %c", &value);
-        clearInputBuffer();
 
-        if (!strchr(validChars, value)) {
+        if (!strchr(validChars, value) || getchar() != '\n') {
             repeat = 1;
+            clearInputBuffer();
             printf("ERROR: Character must be one of [%s]: ", validChars);
         } else {
             repeat = 0;

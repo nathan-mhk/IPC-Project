@@ -1,9 +1,9 @@
 /*/////////////////////////////////////////////////////////////////////////
                         Assignment 1 - Milestone 3
-Full Name  :
-Student ID#:
-Email      :
-Section    :
+Full Name  : Nathan Kong
+Student ID#: 150950236
+Email      : nkong@myseneca.ca
+Section    : NDD
 
 Authenticity Declaration:
 I declare this submission is the result of my own work and has not been
@@ -36,6 +36,50 @@ piece of work is entirely of my own creation.
 
 // MS#3 Additional macro's:
 // ToDo:
+#define TBD_PHONE 3
+#define VLD_PHONE 4
+
+#define MAX_PETS 20
+#define MAX_APPOINTMENTS 50
+
+#define MIN_MON 1
+#define MAX_MON 12
+#define MIN_DAY 1
+
+#define JAN 1
+#define FEB 2
+#define MAR 3
+#define APR 4
+#define MAY 5
+#define JUN 6
+#define JUL 7
+#define AUG 8
+#define SEP 9
+#define OCT 10
+#define NOV 11
+#define DEC 12
+
+#define DAYS_31 31
+#define DAYS_30 30
+
+#define FEB_DAYS 28
+#define FEB_DAYS_LEAP 29
+
+#define APR_DAYS 30
+#define JUN_DAYS 30
+#define SEP_DAYS 30
+#define NOV_DAYS 30
+
+#define MIN_HR 0
+#define MAX_HR 23
+#define MIN_MIN 0
+#define MAX_MIN 59
+
+#define STR_HR 10
+#define STR_MIN 0
+#define END_HR 14
+#define END_MIN 0
+#define APPMNT_INTV 30
 
 
 //////////////////////////////////////
@@ -44,33 +88,52 @@ piece of work is entirely of my own creation.
 
 // Data type: Phone
 // (Copy your code from MS#2)
-
+struct Phone {
+    char description[PHONE_DESC_LEN + 1];
+    char number[PHONE_LEN + 1];
+};
 
 // Data type: Patient 
 // (Copy your code from MS#2)
+struct Patient {
+    int patientNumber;
+    char name[NAME_LEN + 1];
+    struct Phone phone;
+};
 
 // ------------------- MS#3 -------------------
 
 // Data type: Time
 // ToDo:
-
+struct Time {
+    int hour;
+    int min;
+};
 
 // Data type: Date
 // ToDo:
-
+struct Date {
+    int year;
+    int month;
+    int day;
+};
 
 // Data type: Appointment
 // ToDo:
-
+struct Appointment {
+    int patientNumber;
+    struct Time time;
+    struct Date date;
+};
 
 
 // ClinicData type: Provided to student
 // !!! DO NOT MODIFY THIS DATA TYPE !!!
 struct ClinicData
 {
-    struct Patient* patients;
+    struct Patient* patients;           // Patients[]
     int maxPatient;
-    struct Appointment* appointments;
+    struct Appointment* appointments;       // Appointment[]
     int maxAppointments;
 };
 
@@ -133,20 +196,25 @@ void removePatient(struct Patient patient[], int max);
 
 // View ALL scheduled appointments
 // Todo:
-
+void viewAllAppointments(const struct ClinicData* const data);
 
 // View appointment schedule for the user input date
 // Todo:
-
+void viewAppointmentSchedule(const struct ClinicData* const data);
 
 // Add an appointment record to the appointment array
 // Todo:
-
+void addAppointment(
+    struct Appointment* const appoint, const int maxAppoint,
+    const struct Patient* const patient, const int maxPatient
+);
 
 // Remove an appointment record from the appointment array
 // Todo:
-
-
+void removeAppointment(
+    struct Appointment* const appoint, const int maxAppoint,
+    const struct Patient* const patient, const int maxPatient
+);
 
 //////////////////////////////////////
 // UTILITY FUNCTIONS
@@ -165,6 +233,38 @@ int nextPatientNumber(const struct Patient patient[], int max);
 int findPatientIndexByPatientNum(int patientNumber,
                                  const struct Patient patient[], int max);
 
+// Additional Custom Function
+// Merge two sorted half arrays together
+void merge(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int minIndex, const int midIndex, const int maxIndex
+);
+
+// Additional Custom Function
+// Sort the appointments by date in ascending order
+void sortAppointmentsByDate(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int minIndex, const int maxIndex
+);
+
+// Additional Custom Function
+// Display a specific number of appointments
+void displayAppointments(
+    const struct Appointment* appoints[], 
+    const struct Patient* patients[],
+    const int numRecords,
+    const int includeDateField
+);
+
+// Additional Custom Function
+// Check if the given timeslot is occupied (same YYYY-MM-DD HH:MM)
+int timeslotOccupied(
+    const struct Appointment* const currAppoints,
+    const struct Appointment* const newAppoint,
+    const int maxAppoint
+);
 
 //////////////////////////////////////
 // USER INPUT FUNCTIONS
@@ -176,8 +276,36 @@ void inputPatient(struct Patient* patient);
 // Get user input for phone contact information
 void inputPhoneData(struct Phone* phone);
 
+// Additional Custom Function
+// Get user input for date information (YYYY-MM-DD)
+void inputDate(struct Date* const date);
 
+// Additional Custom Function
+// Get user input for time information (HH:MM)
+void inputTime(struct Time* const time);
 
+// Additional Custom Function
+// Get user input for timeslot information
+// Wrapper for inputDate() && inputTime() && validation
+void inputTimeslot(
+    const struct Appointment* const currAppoints,
+    struct Appointment* const newAppoint,
+    const int maxAppoint
+);
+
+// Additional Custom Function
+// Get the index of the appointment by patient number
+int getAppointIndex(
+    const struct Appointment* const appoints,
+    const int maxAppoint,
+    const int patientNum,
+    const struct Date* const date
+);
+
+// Additional Custom Function
+// Get user input for phone number
+// Stripped down version of inputCString()
+void inputPhoneNum(char phoneNum[]);
 
 //////////////////////////////////////
 // FILE FUNCTIONS

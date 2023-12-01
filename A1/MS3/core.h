@@ -1,9 +1,9 @@
 /*/////////////////////////////////////////////////////////////////////////
                         Assignment 1 - Milestone 3
-Full Name  :
-Student ID#:
-Email      :
-Section    :
+Full Name  : Nathan Kong
+Student ID#: 150950236
+Email      : nkong@myseneca.ca
+Section    : NDD
 
 Authenticity Declaration:
 I declare this submission is the result of my own work and has not been
@@ -43,13 +43,21 @@ void clearInputBuffer(void);
 // Wait for user to input the "enter" key to continue
 void suspend(void);
 
+void displayFormattedPhone(const char* const str);
 
 //////////////////////////////////////
 // USER INPUT FUNCTIONS
 //////////////////////////////////////
 
+int inputInt();
 
+int inputIntPositive();
 
+int inputIntRange(const int min, const int max);
+
+char inputCharOption(const char validChars[]);
+
+void inputCString(char* const str, const int min, const int max);
 
 // !!! DO NOT DELETE THE BELOW LINE !!!
 #endif // !CORE_H
