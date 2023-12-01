@@ -551,9 +551,11 @@ void removeAppointment(
 
                 printf("Appointment record has been removed!\n\n");
             } else {
+                // Not present in sample output
                 printf("Operation aborted.\n\n");
             }
         } else {
+            // Not present in sample output
             printf("ERROR: Appointment record not found!\n\n");
         }
     } else {
@@ -1016,6 +1018,7 @@ void inputPhoneNum(char phoneNum[]) {
 
             // chr != '\n'
             if (repeat) {
+                // Too long || invalid char
                 clearInputBuffer();
             }
         } else if (repeat) {

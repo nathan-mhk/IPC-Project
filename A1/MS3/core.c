@@ -174,8 +174,7 @@ void inputCString(char* const str, const int min, const int max) {
              *      '\n' && len < min
              * Too long:
              *      '\n' && len > max
-             *      !'\n' && len == max
-             *      !'\n' && len > max
+             *      !'\n' && len >= max
              * Not equal:
              *      Any of above && min == max 
             */
@@ -224,6 +223,7 @@ void inputCString(char* const str, const int min, const int max) {
 
                 // chr != '\n'
                 if (repeat) {
+                    // Too long || invalid char
                     clearInputBuffer();
                 }
             } else if (repeat) {
