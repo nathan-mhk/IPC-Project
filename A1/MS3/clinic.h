@@ -291,6 +291,20 @@ void inputTimeslot(
     const int maxAppoint
 );
 
+// Additional Custom Function
+// Get the index of the appointment by patient number
+int getAppointIndex(
+    const struct Appointment* const appoints,
+    const int maxAppoint,
+    const int patientNum,
+    const struct Date* const date
+);
+
+// Additional Custom Function
+// Get user input for phone number
+// Stripped down version of inputCString()
+void inputPhoneNum(char phoneNum[]);
+
 //////////////////////////////////////
 // FILE FUNCTIONS
 //////////////////////////////////////

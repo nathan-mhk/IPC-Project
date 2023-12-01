@@ -231,6 +231,8 @@ void inputCString(char* const str, const int min, const int max) {
                 *itr = chr;
                 ++itr;
                 ++len;
+            } else {
+                *itr = '\0';
             }
         }
     } while (reset || repeat);

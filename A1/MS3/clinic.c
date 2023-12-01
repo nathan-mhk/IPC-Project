@@ -479,6 +479,13 @@ void addAppointment(
     int slotAvail = 0;
     struct Appointment newAppoint = { 0, { 0, 0 }, { 0, 0, 0 }};
 
+    // Need to ensure empty slots == -1 first
+    // itr = getAppointIndex(appoint, maxAppoint, -1, NULL);
+
+    // if (itr != -1) {
+
+    // }
+
     for (itr = 0; itr < maxAppoint && !slotAvail; ++itr) {
         if (appoint[itr].patientNumber < 1) {
             slotAvail = 1;
@@ -510,7 +517,48 @@ void removeAppointment(
     struct Appointment* const appoint, const int maxAppoint,
     const struct Patient* const patient, const int maxPatient
 ) {
-    // TODO
+    int patientNum = 0;
+    int appointIndex = 0, patientIndex = 0;
+    struct Date date = { 0, 0, 0 };
+    char opt = '\0';
+
+    printf("Patient Number: ");
+    patientNum = inputIntPositive();
+
+    appointIndex = getAppointIndex(appoint, maxAppoint, patientNum, NULL);
+    patientIndex = findPatientIndexByPatientNum(patientNum, patient, maxPatient);
+
+    if (appointIndex != -1 || patientIndex != -1) {
+        inputDate(&date);
+        putchar('\n');
+
+        appointIndex = getAppointIndex(appoint, maxAppoint, patientNum, &date);
+
+        if (appointIndex != -1) {
+            displayPatientData(patient + patientIndex, FMT_FORM);
+
+            printf("Are you sure you want to remove this appointment (y,n): ");
+            opt = inputCharOption("yn");
+            putchar('\n');
+
+            if (opt == 'y') {
+                appoint[appointIndex].patientNumber = -1;
+                appoint[appointIndex].date.year = 0;
+                appoint[appointIndex].date.month = 0;
+                appoint[appointIndex].date.day = 0;
+                appoint[appointIndex].time.hour = 0;
+                appoint[appointIndex].time.min = 0;
+
+                printf("Appointment record has been removed!\n\n");
+            } else {
+                printf("Operation aborted.\n\n");
+            }
+        } else {
+            printf("ERROR: Appointment record not found!\n\n");
+        }
+    } else {
+        printf("ERROR: Patient record not found!\n\n");
+    }
 }
 
 //////////////////////////////////////
@@ -749,6 +797,33 @@ int timeslotOccupied(
     return 0;
 }
 
+// Additional Custom Function
+// Get the index of the appointment by patient number
+int getAppointIndex(
+    const struct Appointment* const appoints,
+    const int maxAppoint,
+    const int patientNum,
+    const struct Date* const date
+) {
+    int itr = 0;
+
+    for (itr = 0; itr < maxAppoint; ++itr) {
+
+        // patNum && (date == NULL || YMD)
+        if (
+            appoints[itr].patientNumber == patientNum &&
+            (!date || (appoints[itr].date.year == date->year &&
+                        appoints[itr].date.month == date->month &&
+                        appoints[itr].date.day == date->day
+                )
+            )
+        ) {
+            return itr;
+        }
+    }
+    return -1;
+}
+
 //////////////////////////////////////
 // USER INPUT FUNCTIONS
 //////////////////////////////////////
@@ -800,8 +875,8 @@ void inputPhoneData(struct Phone* phone) {
     }
     
     printf("Contact: %s\n", phone->description);
-    printf("Number : ");
-    inputCString(phone->number, PHONE_LEN, PHONE_LEN);
+    inputPhoneNum(phone->number);
+
     putchar('\n');
 }
 
@@ -854,7 +929,7 @@ void inputDate(struct Date* const date) {
 // Additional Custom Function
 // Get user input for time information (HH:MM)
 void inputTime(struct Time* time) {
-    printf("Hour (%d-%d)  :", MIN_HR, MAX_HR);
+    printf("Hour (%d-%d)  : ", MIN_HR, MAX_HR);
     time->hour = inputIntRange(MIN_HR, MAX_HR);
 
     printf("Minute (%d-%d): ", MIN_MIN, MAX_MIN);
@@ -900,6 +975,55 @@ void inputTimeslot(
             printf("\nERROR: Appointment timeslot is not available!\n\n");
         }
     } while (rptDate || rptTime);
+}
+
+// Additional Custom Function
+// Get user input for phone number
+// Stripped down version of inputCString()
+void inputPhoneNum(char phoneNum[]) {
+    const char* const validChars = "1234567890";
+
+    int reset = 0, repeat = 0, itr = 0;
+    char chr = '\0';
+
+    printf("Number : ");
+    do {
+        scanf("%c", &chr);
+
+        repeat = chr != '\n';
+        if (!repeat) {
+            if (strlen(phoneNum) == PHONE_LEN) {
+                // Eq Len
+                phoneNum[itr] = '\0';
+                reset = 0;
+            } else {
+                // Too short
+                reset = 1;
+            }
+        } else /* if (chr != '\n') */ {
+            if (strlen(phoneNum) == PHONE_LEN) {
+                // Too long
+                reset = 1;
+            } else {
+                // Undertermined
+                reset = !strchr(validChars, chr);
+            }
+        }
+        if (reset) {
+            printf("Invalid 10-digit number! Number: ");
+            strncpy(phoneNum, "", PHONE_LEN + 1);
+            itr = 0;
+
+            // chr != '\n'
+            if (repeat) {
+                clearInputBuffer();
+            }
+        } else if (repeat) {
+            // Proceed to next char
+            phoneNum[itr] = chr;
+            ++itr;
+        }
+    } while (reset || repeat);
 }
 
 //////////////////////////////////////
