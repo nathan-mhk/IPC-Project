@@ -182,7 +182,7 @@ void inputCString(char* const str, const int min, const int max) {
             reset = 0;
             ueqLen = 0;
 
-            if (chr == '\n' && len < min) {
+            if (!repeat && len < min) {
                 if (min == max) {
                     // Not equal
                     ueqLen = 1;
@@ -191,7 +191,7 @@ void inputCString(char* const str, const int min, const int max) {
                     reset = 1;
                     printf("ERROR: String length must be between %d and %d chars: ", min, max);
                 }
-            } else if ((chr == '\n' && len > max) || (chr != '\n' && len >= max)) {
+            } else if ((!repeat && len > max) || (repeat && len >= max)) {
                 if (min == max) {
                     // Not equal
                     ueqLen = 1;
@@ -200,20 +200,21 @@ void inputCString(char* const str, const int min, const int max) {
                     reset = 1;
                     printf("ERROR: String length must be no more than %d chars: ", max);
                 }
+            } else if (repeat) {
+                // Undertermined
+                reset = !strchr(validChars, chr);
+                if (reset) {
+                    // Mot present in sample output
+                    printf("ERROR: Invalid character\n");
+                }
+            } else {
+                // Valid string. EOF
+                *itr = '\0';
             }
 
             if (ueqLen) {
                 reset = 1;
                 printf("ERROR: String length must be exactly %d chars: ", min);
-            }
-
-            if (!reset && repeat) {
-                // Check if input char is valid
-                reset = !strchr(validChars, chr);
-
-                if (reset) {
-                    printf("ERROR: Invalid character\n");
-                }
             }
 
             if (reset) {
@@ -231,8 +232,6 @@ void inputCString(char* const str, const int min, const int max) {
                 *itr = chr;
                 ++itr;
                 ++len;
-            } else {
-                *itr = '\0';
             }
         }
     } while (reset || repeat);
