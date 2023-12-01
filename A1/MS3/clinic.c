@@ -426,7 +426,8 @@ void viewAllAppointments(const struct ClinicData* const data) {
             ++itr;
         }
     }
-    sortAndDisplayAppointments(appoints, patients, itr, 1);
+    sortAppointmentsByDate(appoints, patients, 0, itr - 1);
+    displayAppointments(appoints, patients, itr, 1);
 }
 
 // View appointment schedule for the user input date
@@ -466,7 +467,8 @@ void viewAppointmentSchedule(const struct ClinicData* const data) {
             }
         }
     }
-    sortAndDisplayAppointments(appoints, patients, itr, 0);
+    sortAppointmentsByDate(appoints, patients, 0, itr - 1);
+    displayAppointments(appoints, patients, itr, 0);
 }
 
 // Add an appointment record to the appointment array
@@ -715,10 +717,12 @@ void merge(
         }
 
         if (left) {
+            // LHS < RHS
             tmpAppoints[tmpItr] = appoints[itrL];
             tempPatients[tmpItr] = patients[itrL];
             ++itrL;
         } else {
+            // RHS > LHS
             tmpAppoints[tmpItr] = appoints[itrR];
             tempPatients[tmpItr] = patients[itrR];
             ++itrR;
@@ -757,18 +761,15 @@ void sortAppointmentsByDate(
 }
 
 // Additional Custom Function
-// Wrapper for sortAppointmentsByDate() and displaying appointments
-void sortAndDisplayAppointments(
+// Display a specific number of appointments
+void displayAppointments(
     const struct Appointment* appoints[], 
     const struct Patient* patients[],
-    const int numRecords,
+    const int numAppoints,
     const int includeDateField
 ) {
     int itr = 0;
-
-    sortAppointmentsByDate(appoints, patients, 0, numRecords - 1);
-
-    for (itr = 0; itr < numRecords; ++itr) {
+    for (itr = 0; itr < numAppoints; ++itr) {
         displayScheduleData(patients[itr], appoints[itr], includeDateField);
     }
     putchar('\n');
@@ -810,14 +811,13 @@ int getAppointIndex(
     int itr = 0;
 
     for (itr = 0; itr < maxAppoint; ++itr) {
-
+        
         // patNum && (date == NULL || YMD)
         if (
             appoints[itr].patientNumber == patientNum &&
             (!date || (appoints[itr].date.year == date->year &&
-                        appoints[itr].date.month == date->month &&
-                        appoints[itr].date.day == date->day
-                )
+                       appoints[itr].date.month == date->month &&
+                       appoints[itr].date.day == date->day)
             )
         ) {
             return itr;
@@ -924,7 +924,7 @@ void inputDate(struct Date* const date) {
             }
             break;
     }
-    printf("Day (1-%d)  : ", dInM);
+    printf("Day (%d-%d)  : ", MIN_DAY, dInM);
     date->day = inputIntRange(MIN_DAY, dInM);
 }
 
@@ -938,6 +938,9 @@ void inputTime(struct Time* time) {
     time->min = inputIntRange(MIN_MIN, MAX_MIN);
 }
 
+// Additional Custom Function
+// Get user input for timeslot information
+// Wrapper for inputDate() && inputTime() && validation
 void inputTimeslot(
     const struct Appointment* const currAppoints,
     struct Appointment* const newAppoint,
@@ -955,11 +958,10 @@ void inputTimeslot(
 
         // Start time [STR_HR, END_HR] && correct interval
         // Repeat inputTime() if not
-        rptTime = (
-                newAppoint->time.hour < STR_HR || 
-                newAppoint->time.hour > END_HR || 
-                newAppoint->time.min > END_MIN
-            ) || newAppoint->time.min % APPMNT_INTV != 0;
+        rptTime = (newAppoint->time.hour < STR_HR || 
+                    newAppoint->time.hour > END_HR || 
+                    newAppoint->time.min > END_MIN ) || 
+                    newAppoint->time.min % APPMNT_INTV != 0;
 
         if (rptTime) {
             printf(

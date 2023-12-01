@@ -250,8 +250,8 @@ void sortAppointmentsByDate(
 );
 
 // Additional Custom Function
-// Wrapper for sortAppointmentsByDate() and displaying appointments
-void sortAndDisplayAppointments(
+// Display a specific number of appointments
+void displayAppointments(
     const struct Appointment* appoints[], 
     const struct Patient* patients[],
     const int numRecords,
@@ -281,10 +281,12 @@ void inputPhoneData(struct Phone* phone);
 void inputDate(struct Date* const date);
 
 // Additional Custom Function
+// Get user input for time information (HH:MM)
 void inputTime(struct Time* const time);
 
 // Additional Custom Function
-// Get user input for time information (HH:MM)
+// Get user input for timeslot information
+// Wrapper for inputDate() && inputTime() && validation
 void inputTimeslot(
     const struct Appointment* const currAppoints,
     struct Appointment* const newAppoint,
